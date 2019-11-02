@@ -3,17 +3,18 @@ package com.bdd2.models;
 import java.util.Random;
 
 public class Person {
-	private String name;
-	private String lastName;
+	private String nameComplete;
 
 	public Person(String name, String lastName) {
-		this.name = name;
-		this.lastName = lastName;
+		this.nameComplete = new String(lastName + ", " + name);
 	}
 
 	public Person() {
-		this.name = PersonNames.getNameRand();
-		this.lastName = PersonLastNames.getLastNameRand();
+		this.nameComplete = generateCompleteName();
+	}
+	
+	private String generateCompleteName() {
+		return new String(PersonLastNames.getLastNameRand() + ", " + PersonNames.getNameRand());
 	}
 
 	private enum PersonNames {
@@ -34,5 +35,9 @@ public class Person {
 			Random random = new Random();
 			return values()[random.nextInt(values().length)].toString();
 		}
+	}
+	
+	public String nameComplete() {
+		return this.nameComplete;
 	}
 }
