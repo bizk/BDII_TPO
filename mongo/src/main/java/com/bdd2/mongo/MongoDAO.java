@@ -8,7 +8,7 @@ import com.mongodb.BasicDBObject;
 
 public class MongoDAO {
 
-	public static void createInversion(String name, String type, String fdc, double actualPrice, double buyPrice,
+	public static BasicDBObject createInversion(String name, String type, String fdc, double actualPrice, double buyPrice,
 			List<BasicDBObject> hv,List<BasicDBObject> op, List<BasicDBObject> recomendations) {
 		BasicDBObject doc = new BasicDBObject("name",name)
 				.append("type", type)
@@ -20,6 +20,6 @@ public class MongoDAO {
 				.append("recomendations", recomendations)
 				;
 		
-		System.out.println(doc.toJson());
+		return doc;
 	}
 }
