@@ -1,0 +1,16 @@
+# Don't track content of these folders
+neo4j/target/
+mongo/target/
+cassandra/target/
+redus/target/
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+*.so
