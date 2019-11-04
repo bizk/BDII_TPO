@@ -8,43 +8,71 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.Random;
 
+import com.bdd2.models.HistoricVal;
+import com.bdd2.models.Investment;
+import com.bdd2.models.Opinion;
+import com.bdd2.models.Person;
+import com.bdd2.models.Transaction;
 import com.mongodb.BasicDBObject;
 
 public class RandomGenerator {
-	public static BasicDBObject generateInvestment() {
-		BasicDBObject investment = new BasicDBObject();
-		
-		List<BasicDBObject> op = new ArrayList<BasicDBObject>();
-		List<BasicDBObject> rec = new ArrayList<BasicDBObject>();
-		return MongoDAO.createInversion(InvestmentName.getInvestmentName().toString(), InvestmentType.getType().toString(),
-				null, getRandomDouble(), getRandomDouble(), generateHistoricValues(), op, rec);
-	}
-
-	private enum InvestmentName {
-		gogle, ipf, pmgorgan, freemarket, appe, hintel, masung, tomorola, ecorp, blul4gr4ng3, idkimakiwi, stream,
-		vlizard, uwuinc, bmd, bizkcorp;
-
-		public static InvestmentName getInvestmentName() {
-			Random random = new Random();
-			return values()[random.nextInt(values().length)];
-		}
-	}
-
-	private enum InvestmentType {
-		Stock, Bond, Future, MutualFund, IndexFund, Option;
-
-		public static InvestmentType getType() {
-			Random random = new Random();
-			return values()[random.nextInt(values().length)];
-		}
-	}
-
-	private static double getRandomDouble() {
-		Random random = new Random();
-		return random.nextDouble();
+	private List<String> assesors;
+	private List<String> operators;
+	
+	private static RandomGenerator instance;
+	
+	public static RandomGenerator getInstance() {
+		if (instance == null) {
+			instance = new RandomGenerator();
+		} 
+		return instance;
 	}
 	
-	private static List<BasicDBObject> generateHistoricValues() { 
+	private  RandomGenerator() {
+		this.assesors = new ArrayList<String>();
+		this.operators = new ArrayList<String>();
+		for(int i = 0; i < 10; i++) 
+			this.assesors.add((new Person()).getNameComplete());
+		
+		for(int i = 0; i < 10; i++) 
+			this.operators.add((new Person()).getNameComplete());	
+	}
+	
+	public BasicDBObject generateInvestment() {
+		Random random = new Random();
+		
+		List<BasicDBObject> historicalValues = new ArrayList<BasicDBObject>();
+		for(int i=0; i < random.nextInt(100); i++) {
+			historicalValues.add((new HistoricVal()).getBasicDBObject());
+		}
+		
+		List<BasicDBObject> transactions = new ArrayList<BasicDBObject>();
+		for(int i=0; i < random.nextInt(100); i++) {
+			String asesor = getRandomAsesor();
+			String operator = getRandomOperator();
+			transactions.add((new Transaction(asesor,operator)).getBasicDBObject());
+		}
+
+		List<BasicDBObject> opinions = new ArrayList<BasicDBObject>();
+		for(int i=0; i < random.nextInt(100); i++) {
+			String autor = getRandomAsesor();
+			opinions.add((new Opinion(autor)).getBasicDBObject());
+		}
+
+		return (new Investment(historicalValues, transactions, opinions)).getBasicDBObject();
+	}
+
+	private String getRandomAsesor() {
+		Random random = new Random();
+		return assesors.get(random.nextInt(assesors.size()));
+	}
+	
+	private String getRandomOperator() {
+		Random random = new Random();
+		return operators.get(random.nextInt(operators.size()));
+	}
+	
+	private List<BasicDBObject> generateHistoricValues() { 
 		List<BasicDBObject> historicalValues = new ArrayList<BasicDBObject>();
 		Random random = new Random();
 		for (int i = 0; i < random.nextInt(100); i++) {

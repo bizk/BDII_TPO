@@ -10,12 +10,12 @@ import com.mongodb.BasicDBObject;
 
 public class Transaction implements DBObjectInterface {
 	private double value;
-	private Person asesor;
-	private Person operator;
+	private String asesor;
+	private String operator;
 	private Date date;
 	private String tradeType;
 	
-	public Transaction(double value, Person asesor, Person operator, Date date, String tradeType) {
+	public Transaction(double value, String asesor, String operator, Date date, String tradeType) {
 		this.value = value;
 		this.asesor = asesor;
 		this.operator = operator;
@@ -23,7 +23,7 @@ public class Transaction implements DBObjectInterface {
 		this.tradeType = tradeType;
 	}
 	
-	public Transaction(Person asesor, Person operator) {
+	public Transaction(String asesor, String operator) {
 		this.value = generateRandValue();
 		this.asesor = asesor;
 		this.operator = operator;

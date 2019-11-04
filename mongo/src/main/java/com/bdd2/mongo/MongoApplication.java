@@ -33,7 +33,9 @@ public class MongoApplication {
 
 		MongoDAO.createInversion("carlos", "XD", "-1", 123.12, 50.42, historicValues, op, rec);
 
+		RandomGenerator randomGenerator = RandomGenerator.getInstance();
 		for (int i = 0; i < 10; i++)
-			System.out.println(RandomGenerator.generateInvestment());
+			System.out.println(randomGenerator.generateInvestment());
+		//System.out.println();
 	}
 }

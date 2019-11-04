@@ -37,7 +37,7 @@ public class Person {
 		}
 	}
 	
-	public String nameComplete() {
+	public String getNameComplete() {
 		return this.nameComplete;
 	}
 }
