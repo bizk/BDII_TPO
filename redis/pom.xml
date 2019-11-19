@@ -8,7 +8,7 @@
 		<version>2.2.0.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.bd2</groupId>
+	<groupId>com.bdd2</groupId>
 	<artifactId>redis</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>redis</name>
@@ -34,6 +34,17 @@
 					<artifactId>junit-vintage-engine</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.data</groupId>
+		    <artifactId>spring-data-redis</artifactId>
+		 </dependency>
+		 
+		<dependency>
+		    <groupId>redis.clients</groupId>
+		    <artifactId>jedis</artifactId>
+		    <type>jar</type>
 		</dependency>
 	</dependencies>
 
