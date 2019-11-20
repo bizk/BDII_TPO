@@ -16,7 +16,7 @@ import com.bd2.redis.models.Unit;
 import redis.clients.jedis.Jedis;
 
 public class BuildingDAO  {
-	private Jedis connection;
+	private static Jedis connection;
 	
 	private static OwnerDAO ownerDAO;
 	
@@ -24,7 +24,7 @@ public class BuildingDAO  {
 		connection = DbConnection.getConnection();
 	}
 	
-	public void add(Building building) {
+	public static void add(Building building) {
 		connection.sadd("buildings", building.getId());
 		
 		String buildingSetId = new String("buildings:"+building.getId());
@@ -40,7 +40,7 @@ public class BuildingDAO  {
 		}
 	}
 	
-	public void addUnit(Building building, Unit unit) {
+	public static void addUnit(Building building, Unit unit) {
 		String buildingSetIdUnit = new String("buildings:"+building.getId()+":units");
 		connection.sadd(buildingSetIdUnit, unit.getId());
 

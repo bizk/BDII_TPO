@@ -37,9 +37,9 @@ public class OwnerDAO {
 		connection.sadd(keyOwner, keyVañue);
 	}
 
-	public void delete(Unit unit) {
+	public void delete(Owner owner) {
 		try {
-			String unitSetId = new String("owners:"+unit.getId());
+			String unitSetId = new String("owners:"+owner.getId());
 			connection.del(unitSetId);
 		} catch (Exception e) {
 			System.out.println("No se pudo borrar el elemento.");
