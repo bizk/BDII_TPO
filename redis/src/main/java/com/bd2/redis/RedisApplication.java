@@ -39,15 +39,7 @@ public class RedisApplication {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(RedisApplication.class, args);
-		//con.getConnection();
-		BuildingDAO bdao =  new BuildingDAO();
-		Building building = new Building("AL1","Alisa I", "Santa fe 1234", null);
-		bdao.add(building);
-		Building bTestGet = bdao.getBuilding("AL1");
-		System.out.println("Se obtuvo con exito! " + bTestGet.getName());
-		bdao.delete("AL1");
-		Building bTestGet2 = bdao.getBuilding("AL1");
-		System.out.println("Se obtuvo con exito! " + bTestGet2.getName());
+		
 	} 
 
 }

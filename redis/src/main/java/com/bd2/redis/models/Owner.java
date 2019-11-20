@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Owner implements Serializable {
-	private int id;
+	private String id;
 	private String name;
 	private String surname;
 	private List<Unit> owns;
@@ -13,7 +13,7 @@ public class Owner implements Serializable {
 		super();
 	}
 
-	public Owner(int id, String name, String surname, List<Unit> owns) {
+	public Owner(String id, String name, String surname, List<Unit> owns) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -21,11 +21,11 @@ public class Owner implements Serializable {
 		this.owns = owns;
 	}
 
-	public int getId() {
-		return id;
+	public String getId() {
+		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
