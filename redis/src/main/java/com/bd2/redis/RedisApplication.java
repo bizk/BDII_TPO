@@ -19,7 +19,6 @@ public class RedisApplication {
 	private String HOSTNAME = "localhost";
 	private int PORT = 6379;
 	
-	private static DbConnection con;
 	
 	@Bean
 	JedisConnectionFactory jedisConnectionFactory() {

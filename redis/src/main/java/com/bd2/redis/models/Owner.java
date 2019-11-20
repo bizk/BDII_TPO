@@ -7,13 +7,13 @@ public class Owner implements Serializable {
 	private String id;
 	private String name;
 	private String surname;
-	private List<Unit> owns;
+	private List<String> owns; //String of units id
 	
 	public Owner() {
 		super();
 	}
 
-	public Owner(String id, String name, String surname, List<Unit> owns) {
+	public Owner(String id, String name, String surname, List<String> owns) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -45,11 +45,11 @@ public class Owner implements Serializable {
 		this.surname = surname;
 	}
 
-	public List<Unit> getOwns() {
+	public List<String> getOwns() {
 		return owns;
 	}
 
-	public void setOwns(List<Unit> owns) {
+	public void setOwns(List<String> owns) {
 		this.owns = owns;
 	}
 	

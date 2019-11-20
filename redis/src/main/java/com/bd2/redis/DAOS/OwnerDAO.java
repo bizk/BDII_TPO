@@ -31,7 +31,7 @@ public class OwnerDAO {
 		connection.hset(ownersSetId, map);
 	}
 	
-	public void addOwner(Building building, Owner owner, Unit unit) {
+	public void addOwnsBuilding(Building building, Owner owner, Unit unit) {
 		String keyOwner = new String("owners:"+owner.getId()+";owns");
 		String keyVañue = new String("buildings:"+building.getId()+":units:"+unit.getId());
 		connection.sadd(keyOwner, keyVañue);
@@ -47,7 +47,11 @@ public class OwnerDAO {
 	}
 
 	public List<Owner> getAll() {
-		
+		List<Owner> owners = new ArrayList<Owner>();
+		for(String key: connection.hkeys("owners")) {
+			owners.add(getOwner(key));
+		}
+		return owners;
 	}
 	
 	public Owner getOwner(String id) {
@@ -57,7 +61,7 @@ public class OwnerDAO {
 					id,
 					connection.hget(ownerSetId, "name"),
 					connection.hget(ownerSetId, "surname"),
-					listOfUnits()
+					ownedUnits(id)
 					);
 		} catch (Exception e) {
 			System.out.println("Probablemente no exista dicho dueño!");
@@ -66,7 +70,7 @@ public class OwnerDAO {
 	}
 	
 	//IMPLEMENT THIS
-	public static List<Owner> getOwnersBuildingKey(String key) {
+	public static List<Owner> getOwnersByBuildingKey (String key) {
 		String unitOwnerSetId = new String(key+":owners");
 		List<Owner> owners = new ArrayList<Owner>();
 		for(String k: connection.hkeys(unitOwnerSetId)) {
@@ -75,11 +79,18 @@ public class OwnerDAO {
 					k,
 					connection.hget(ownerKey, "name"),
 					connection.hget(ownerKey, "surname"),
-					listOfOwn 
+					ownedUnits(k) 
 					);
 			owners.add(owner);
 		}
-		
 		return owners;
+	}
+	
+	private static List<String> ownedUnits(String id) {
+		String ownerStr = new String("owners:"+id+":owns");
+		List<String> units = new ArrayList<String>();
+		for(String unitId: connection.hkeys(ownerStr)) 
+			units.add(unitId);
+		return units;
 	}
 }
