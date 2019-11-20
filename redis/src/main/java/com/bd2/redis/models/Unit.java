@@ -6,12 +6,12 @@ import java.util.List;
 public class Unit implements Serializable {
 	private String id;
 	private String status;
-	private int tenant;
+	private String tenant;
 	private List<Owner> owners;
 	
 	public Unit() { }
 	
-	public Unit(String id, String status, int tenant, List<Owner> owners) {
+	public Unit(String id, String status, String tenant, List<Owner> owners) {
 		this.id = id;
 		this.status = status;
 		this.tenant = tenant;
@@ -30,10 +30,10 @@ public class Unit implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public int getTenant() {
+	public String getTenant() {
 		return tenant;
 	}
-	public void setTenant(int tenant) {
+	public void setTenant(String tenant) {
 		this.tenant = tenant;
 	}
 
