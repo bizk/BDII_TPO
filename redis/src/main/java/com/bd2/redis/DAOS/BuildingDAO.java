@@ -57,6 +57,9 @@ public class BuildingDAO  {
 		connection.sadd(buildingUnitOwner, "owners:"+owner.getId());
 	}
 	
+	public List<Building> getAll() {
+		
+	}
 	
 	public Building getBuilding(String id) {
 		String buildingSetId = new String("buildings:"+id);
@@ -88,7 +91,7 @@ public class BuildingDAO  {
 					key,
 					connection.hget(unitKey, "status"),
 					connection.hget(unitKey, "tenant"),
-					ownerDAO.getOwnersBuildingKey(key)
+					ownerDAO.getOwnersBuildingKey(unitKey)
 					);			
 			units.add(unit);
 		}
