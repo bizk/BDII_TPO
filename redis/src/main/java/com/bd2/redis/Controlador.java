@@ -3,6 +3,7 @@ package com.bd2.redis;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,7 +19,7 @@ public class Controlador {
 	private static Scanner in;
 	private static BufferedReader br;
 	
-	public static void init() {
+	public static void init() throws IOException {
 		bdao = new BuildingDAO();
 		odao = new OwnerDAO();
 		br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,7 +29,21 @@ public class Controlador {
         	printMenu();
         	opc = in.nextInt();
         	switch(opc) {
-        		
+        		case 1:
+        			agregarEdificio();
+        			break;
+        		case 2:
+        			eliminarEdificio();
+        			break;
+        		case 3:
+        			buscarEdificio();
+        			break;
+        		case 4:
+        			obtenerEdificios();
+        			break;
+        		case 0:
+        			System.out.println("terminado!");
+        			return ;
         	}
         }
 	}
@@ -40,10 +55,7 @@ public class Controlador {
 		String name = br.readLine();
 		System.out.println("Escriba una direccion: ");
 		String address = br.readLine();
-		
-		
-		
-		bdao.add(new Building(id, name, address, null));
+		bdao.add(new Building(id, name, address, new ArrayList<>()));
 	}
 	
 	private static void eliminarEdificio() throws IOException {
@@ -54,11 +66,9 @@ public class Controlador {
 	private static void buscarEdificio() throws IOException {
 		System.out.println("Escriba un id: ");
 		String id = br.readLine();
-		System.out.println(bdao.getBuilding(id).toString());;
+		System.out.println(bdao.getBuilding(id).getName());;
 	}
 	private static void obtenerEdificios() throws IOException {
-		System.out.println("Escriba un id: ");
-		String id = br.readLine();
 		List<Building> buildings = bdao.getAll();
 		for(Building bd: buildings)
 			System.out.println(bd.toString());
@@ -74,7 +84,7 @@ public class Controlador {
 		
 		
 		
-		odao.add(new Owner(id, name, surname, units));
+		odao.add(new Owner(id, name, surname, null));
 	}
 	private static void eliminarDuenio() throws IOException {
 		System.out.println("Escriba un id: ");
@@ -94,7 +104,7 @@ public class Controlador {
 	
 	
 	
-	
+	/*
 	private static void agregarDuenioUnidad() throws IOException {
 		System.out.println("Escriba un id del edif: ");
 		String idBuilding = br.readLine();
@@ -121,7 +131,7 @@ public class Controlador {
 		Unit un =  udao.getUnit(idUnidad);
 		bdao.removeOwner(bd, un, ow);
 		odao.removeOwnsBuilding(bd, ow, un);
-	}
+	}*/
 	
 	private static void printMenu() {
 		System.out.println("==== M E N U ====");
