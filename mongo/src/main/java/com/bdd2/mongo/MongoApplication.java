@@ -12,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoDatabase;
 
+import controlador.Controlador;
+
 @SpringBootApplication
 public class MongoApplication {
 	public static void main(String[] args) {
@@ -19,7 +21,7 @@ public class MongoApplication {
 		// MongoDatabase db = DbConnectionUtils.getConnection().getDb();
 		// System.out.println(db.getName());
 	
-		
-	
+		Controlador ctr = new Controlador();
+		ctrl.ini
 	}
 }
