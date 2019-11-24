@@ -16,6 +16,19 @@ public class Investment {
 	private List<BasicDBObject> transactions;
 	private List<BasicDBObject> opinions;
 	
+	public Investment(String name, String type, Date fdc, double actualValue, double buyValue,
+			List<BasicDBObject> historicValues, List<BasicDBObject> transactions, List<BasicDBObject> opinions) {
+		super();
+		this.name = name;
+		this.type = type;
+		this.fdc = fdc;
+		this.actualValue = actualValue;
+		this.buyValue = buyValue;
+		this.historicValues = historicValues;
+		this.transactions = transactions;
+		this.opinions = opinions;
+	}
+
 	public Investment(List<BasicDBObject> historicValues, List<BasicDBObject> transactions, List<BasicDBObject> opinions) {
 		this.name = InvestmentName.getInvestmentName().toString();
 		this.type = InvestmentType.getType().toString();

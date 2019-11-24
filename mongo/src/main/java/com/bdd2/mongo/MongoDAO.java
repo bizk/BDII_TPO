@@ -4,22 +4,95 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.bdd2.models.Investment;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.MongoClient;
+import com.mongodb.WriteResult;
 
 public class MongoDAO {
-
-	public static BasicDBObject createInversion(String name, String type, String fdc, double actualPrice, double buyPrice,
-			List<BasicDBObject> hv,List<BasicDBObject> op, List<BasicDBObject> recomendations) {
-		BasicDBObject doc = new BasicDBObject("name",name)
-				.append("type", type)
+	private static DB db;
+	private static DBCollection inversionesDb;
+	public MongoDAO() {
+		MongoClient mongo = new MongoClient("localhost", 27017);
+		db = mongo.getDB("inversionesDB");
+		inversionesDb = db.getCollection("inversiones");
+	}
+	
+	/*
+	public static BasicDBObject createInversion(Investment inversion) {
+		BasicDBObject doc = new BasicDBObject("nombre",inversion.get)
+				.append("tipo", type)
 				.append("fdc",fdc)
-				.append("actualPrice", actualPrice)
-				.append("buyPrice", buyPrice)
-				.append("historicVal", hv)
+				.append("PrecioActual", actualPrice)
+				.append("precioCompra", buyPrice)
+				.append("valorHistorico", hv)
 				.append("op", op)
-				.append("recomendations", recomendations)
-				;
+				.append("recomendations", recomendations);
 		
 		return doc;
+	}
+	*/
+	
+	public static BasicDBObject createHistoricValue(Date date, float precio) {
+		BasicDBObject doc = new BasicDBObject("fecha", date)
+				.append("precio", precio);
+		return doc;
+	}
+	
+	public static BasicDBObject createOperation(float importe, String asesor, String operador,
+			Date fecha, String tipo) {
+		BasicDBObject doc = new BasicDBObject("importe", importe)
+				.append("asesor", asesor).append("operador", operador)
+				.append("fecha", fecha).append("tipo", tipo);
+		return doc;
+	}
+	
+	public static BasicDBObject createRecomendacion(String autor, Date fecha, String situacionActual,
+			String factoresExternos, String futuro, String recomendacion) {
+		BasicDBObject doc = new BasicDBObject("autor", autor).append("fecha", fecha)
+				.append("situacionActual", situacionActual).append("factoresExternos", factoresExternos)
+				.append("futuro", futuro).append("recomendacion", recomendacion);
+		return doc;
+	}
+
+	public static void addInversion(Investment inversion) {
+		WriteResult result = inversionesDb.insert(inversion.getBasicDBObject());
+		System.out.println(result.getUpsertedId());
+		System.out.println(result.getN());
+		System.out.println(result.isUpdateOfExisting());
+	}
+	
+	public static void deleteInversion(String name) {
+		WriteResult result = inversionesDb.remove(findInversion(name));
+		System.out.println(result.getUpsertedId());
+		System.out.println(result.getN());
+		System.out.println(result.isUpdateOfExisting());
+	}
+
+	public static void findAll() {
+		DBCursor cursor = inversionesDb.find();
+		try {
+			while(cursor.hasNext()) {
+				System.out.println(cursor.next());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static BasicDBObject findInversion(String name) {
+		BasicDBObject query = new BasicDBObject("name", name);
+		DBCursor cursor = inversionesDb.find(query);
+		try {
+			while(cursor.hasNext()) {
+				System.out.println(cursor.next());
+			}
+		} catch (Exception e) {
+			System.out.println("No existe tal inversione");
+		}
+		return null;
 	}
 }
