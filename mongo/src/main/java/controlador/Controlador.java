@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 import javax.annotation.Generated;
 
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators.Ln;
 
 import com.bdd2.models.HistoricVal;
@@ -63,12 +65,20 @@ public class Controlador {
         		case 5:
         			automaticGenerateInvestment();
         			break;
+        		case 11:
+        			vista1();
+        			break;
         		case 0:
         			System.out.println("Adios! :)");
         			return;
         	}
         }
 	}
+	
+	private static void vista1() {
+		mongoDAO.vista1();
+	}
+	
 	
 	private static void agregarInversion() throws IOException {
 		System.out.println("Inserte nombre: ");
@@ -125,7 +135,6 @@ public class Controlador {
 	private static void findAll() {
 		mongoDAO.findAll();
 	}
-
 	private static void printMenu() {
 		System.out.println("==== M E N U ====");
 		System.out.println("1- Agregar Inversion");

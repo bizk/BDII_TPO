@@ -1,7 +1,12 @@
 package com.bdd2.mongo;
 
 import java.util.List;
+
+import org.bson.Document;
+import org.bson.conversions.Bson;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import com.bdd2.models.Investment;
@@ -13,10 +18,14 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.WriteResult;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
 public class MongoDAO {
-	private static DB db;
-	private static DBCollection inversionesDb;
+	private static MongoDatabase db;
+	private static MongoCollection<Document> inversionesDb;
 	public MongoDAO() {
 		/*MongoClientURI uri = new MongoClientURI(
 		    "mongodb+srv://dbUser:Abcde12345!@dbiicluster-mc1uy.mongodb.net/test?retryWrites=true&w=majority");
@@ -26,24 +35,29 @@ public class MongoDAO {
 		
 		//		MongoDatabase database = mongoClient.getDatabase("test");
 		MongoClient mongo = new MongoClient();
-		db = mongo.getDB("bdII");
+		db = mongo.getDatabase("bdII_1");
 		inversionesDb = db.getCollection("inversiones");
 	}
 	
-	/*
-	public static BasicDBObject createInversion(Investment inversion) {
-		BasicDBObject doc = new BasicDBObject("nombre",inversion.get)
-				.append("tipo", type)
-				.append("fdc",fdc)
-				.append("PrecioActual", actualPrice)
-				.append("precioCompra", buyPrice)
-				.append("valorHistorico", hv)
-				.append("op", op)
-				.append("recomendations", recomendations);
-		
-		return doc;
+	public static void vista1() {
+		AggregateIterable<Document> documents = inversionesDb.aggregate(Arrays.asList(
+				new Document("$project", 
+						new Document("nombre",1).append("cantidadOperaciones", 
+								new Document("$size", "$operaciones")
+						)
+					),
+				new Document("$sort", new Document("nombre", 1)),
+				new Document("$sort", 
+						new Document("cantidadOperaciones",-1)
+					),
+				new Document("$project", 
+						new Document("_id",1).append("nombre", 1).append("cantidadOperaciones", 1)),
+				new Document("$limit",1)
+				));
+		for(Document doc: documents){
+			System.out.println(doc);
+		}
 	}
-	*/
 	
 	public static BasicDBObject createHistoricValue(Date date, float precio) {
 		BasicDBObject doc = new BasicDBObject("fecha", date)
@@ -68,42 +82,27 @@ public class MongoDAO {
 	}
 
 	public static void addInversion(Investment inversion) {
-		WriteResult result = inversionesDb.insert(inversion.getBasicDBObject());
-		System.out.println(result.getUpsertedId());
-		System.out.println(result.getN());
-		System.out.println(result.isUpdateOfExisting());
+		inversionesDb.insertOne(new Document(inversion.getBasicDBObject().toMap()));
 	}
 	
 	public static void deleteInversion(String name) {
 		try {
-			DBObject doc = inversionesDb.findOne(new BasicDBObject("name",name));
-			WriteResult result = inversionesDb.remove(doc);
+			inversionesDb.findOneAndDelete(new BasicDBObject("nombre",name));
 		} catch (Exception e) {
 			System.out.println("No existe dicha inversion");
 		}
 	}
 
 	public static void findAll() {
-		DBCursor cursor = inversionesDb.find();
-		try {
-			while(cursor.hasNext()) {
-				System.out.println(cursor.next());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		FindIterable<Document> cursor = inversionesDb.find();
+		for(Document doc: cursor) 
+			System.out.println(doc);
 	}
 	
-	public static BasicDBObject findInversion(String name) {
-		BasicDBObject query = new BasicDBObject("name", name);
-		DBCursor cursor = inversionesDb.find(query);
-		try {
-			while(cursor.hasNext()) {
-				System.out.println(cursor.next());
-			}
-		} catch (Exception e) {
-			System.out.println("No existe tal inversione");
-		}
-		return null;
+	public static void findInversion(String name) {
+		BasicDBObject query = new BasicDBObject("nombre", name);
+		FindIterable<Document> cursor = inversionesDb.find(query);
+		for(Document doc: cursor) 
+			System.out.println(doc);
 	}
 }

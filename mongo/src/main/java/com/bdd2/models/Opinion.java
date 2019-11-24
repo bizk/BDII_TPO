@@ -25,7 +25,7 @@ public class Opinion implements DBObjectInterface {
 	
 	public Opinion(String autor) {
 		this.autor = autor;
-		this.date = null;
+		this.date = new Date();
 		this.currentSituation = CurrentSituation.generateCurrentSituation();
 		this.situation = Situation.generateSituation();
 		this.prediction = Predictions.generatePrediction();
