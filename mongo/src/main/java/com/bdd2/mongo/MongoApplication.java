@@ -21,7 +21,7 @@ public class MongoApplication {
 		// MongoDatabase db = DbConnectionUtils.getConnection().getDb();
 		// System.out.println(db.getName());
 	
-		Controlador ctr = new Controlador();
-		ctrl.ini
+		Controlador ctrl = new Controlador();
+		ctrl.init();
 	}
 }

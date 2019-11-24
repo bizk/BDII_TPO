@@ -17,8 +17,8 @@ public class HistoricVal implements DBObjectInterface {
 
 	public HistoricVal() {
 		super();
-		this.date = null;
-		this.price = price;
+		this.date = new Date();
+		this.price = generatePrice();
 	}
 
 	private double generatePrice() {

@@ -12,7 +12,10 @@ import javax.annotation.Generated;
 
 import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators.Ln;
 
+import com.bdd2.models.HistoricVal;
 import com.bdd2.models.Investment;
+import com.bdd2.models.Person;
+import com.bdd2.models.Transaction;
 import com.bdd2.mongo.MongoDAO;
 import com.mongodb.BasicDBObject;
 
@@ -56,7 +59,12 @@ public class Controlador {
         			break;
         		case 4:
         			findAll();
+        			break;
+        		case 5:
+        			automaticGenerateInvestment();
+        			break;
         		case 0:
+        			System.out.println("Adios! :)");
         			return;
         	}
         }
@@ -124,6 +132,7 @@ public class Controlador {
 		System.out.println("2- Eliminar Inversion");
 		System.out.println("3- Buscar Inversion");
 		System.out.println("4- Todos las inversiones");
+		System.out.println("5 - generar Automaticamente Inversion");
 		//Space for extra things
 		System.out.println("11- vista 1");
 		System.out.println("=============");
@@ -184,5 +193,31 @@ public class Controlador {
 
 		return mongoDAO.createRecomendacion(autor, fecha, situacionActual, factoresExternos, futuro, recomendacion);
 	}
+	
+	private static void automaticGenerateInvestment() {
+		List<BasicDBObject> historicValues = new ArrayList();
+		List<BasicDBObject> transactions = new ArrayList();
+		List<BasicDBObject> opinions = new ArrayList();
+		for(int i = 0; i<10; i++) {
+			HistoricVal hv = new HistoricVal();
+			historicValues.add(hv.getBasicDBObject());
+		}
+		for(int i = 0; i<5; i++) {
+			Person asesor = new Person();
+			Person operator = new Person();
+			Transaction tr = new Transaction(asesor.getNameComplete(), operator.getNameComplete());
+			transactions.add(tr.getBasicDBObject());
+		}
+		for(int i = 0; i<5; i++) {
+			Person asesor = new Person();
+			Person operator = new Person();
+			Transaction op = new Transaction(asesor.getNameComplete(), operator.getNameComplete());
+			opinions.add(op.getBasicDBObject());
+		}
+		
+		Investment investment = new Investment(historicValues,transactions,opinions);
+		System.out.println(investment.toString());
+		mongoDAO.addInversion(investment);
+	}	
 
 }

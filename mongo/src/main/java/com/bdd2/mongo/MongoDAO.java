@@ -9,15 +9,24 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.WriteResult;
 
 public class MongoDAO {
 	private static DB db;
 	private static DBCollection inversionesDb;
 	public MongoDAO() {
-		MongoClient mongo = new MongoClient("localhost", 27017);
-		db = mongo.getDB("inversionesDB");
+		/*MongoClientURI uri = new MongoClientURI(
+		    "mongodb+srv://dbUser:Abcde12345!@dbiicluster-mc1uy.mongodb.net/test?retryWrites=true&w=majority");
+		
+
+		MongoClient mongo = new MongoClient(uri);*/
+		
+		//		MongoDatabase database = mongoClient.getDatabase("test");
+		MongoClient mongo = new MongoClient();
+		db = mongo.getDB("bdII");
 		inversionesDb = db.getCollection("inversiones");
 	}
 	
@@ -66,10 +75,12 @@ public class MongoDAO {
 	}
 	
 	public static void deleteInversion(String name) {
-		WriteResult result = inversionesDb.remove(findInversion(name));
-		System.out.println(result.getUpsertedId());
-		System.out.println(result.getN());
-		System.out.println(result.isUpdateOfExisting());
+		try {
+			DBObject doc = inversionesDb.findOne(new BasicDBObject("name",name));
+			WriteResult result = inversionesDb.remove(doc);
+		} catch (Exception e) {
+			System.out.println("No existe dicha inversion");
+		}
 	}
 
 	public static void findAll() {
