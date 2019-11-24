@@ -124,7 +124,7 @@ public class Controlador {
 		System.out.println("2- Eliminar Inversion");
 		System.out.println("3- Buscar Inversion");
 		System.out.println("4- Todos las inversiones");
-		
+		//Space for extra things
 		System.out.println("11- vista 1");
 		System.out.println("=============");
 		System.out.println("0 - SALIR");
