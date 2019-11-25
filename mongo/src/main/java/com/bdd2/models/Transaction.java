@@ -27,7 +27,7 @@ public class Transaction implements DBObjectInterface {
 		this.value = generateRandValue();
 		this.asesor = asesor;
 		this.operator = operator;
-		this.date = null;
+		this.date = new Date();
 		this.tradeType = TradeType.getTradeType();
 	}
 	
