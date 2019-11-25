@@ -161,8 +161,6 @@ public class Controlador {
 	}
 	
 
-	
-	/*
 	private static void agregarDuenioUnidad() throws IOException {
 		System.out.println("Escriba un id del edif: ");
 		String idBuilding = br.readLine();
@@ -170,11 +168,7 @@ public class Controlador {
 		String idUnidad = br.readLine();
 		System.out.println("Escriba un id del duenio: ");
 		String idDuenio = br.readLine();
-		Building bd = bdao.getBuilding(idBuilding);
-		Owner ow =  odao.getOwner(idDuenio);
-		Unit un =  udao.getUnit(idUnidad);
-		bdao.addOwner(bd, un, ow);
-		odao.addOwnsBuilding(bd, ow, un);
+		odao.addOwnsBuilding(idBuilding, idDuenio, idUnidad);
 	}
 	private static void eliminarDuenioUnidad() throws IOException {
 		System.out.println("Escriba un id del edif: ");
@@ -184,12 +178,8 @@ public class Controlador {
 		System.out.println("Escriba un id del duenio: ");
 		String idDuenio = br.readLine();
 
-		Building bd = bdao.getBuilding(idBuilding);
-		Owner ow =  odao.getOwner(idDuenio);
-		Unit un =  udao.getUnit(idUnidad);
-		bdao.removeOwner(bd, un, ow);
-		odao.removeOwnsBuilding(bd, ow, un);
-	}*/
+		odao.removeOwnsBuilding(idBuilding, idDuenio, idUnidad);
+	}
 	
 	private static void printMenu() {
 		System.out.println("==== M E N U ====");

@@ -30,7 +30,6 @@ public class OwnerDAO {
 		
 		connection.hset(ownersSetId, map);
 	}
-	
 	public void delete(String ownerId) {
 		try {
 			String unitSetId = new String("owners:"+ownerId);
@@ -39,15 +38,6 @@ public class OwnerDAO {
 			System.out.println("No se pudo borrar el elemento.");
 		}
 	}
-	
-	public void addOwnsBuilding(Building building, Owner owner, Unit unit) {
-		String keyOwner = new String("owners:"+owner.getId()+";owns");
-		String keyVañue = new String("buildings:"+building.getId()+":units:"+unit.getId());
-		connection.sadd(keyOwner, keyVañue);
-	}
-
-
-
 	public List<Owner> getAll() {
 		List<Owner> owners = new ArrayList<Owner>();
 		for(String keyset: connection.keys("*owners*")) {
@@ -62,7 +52,6 @@ public class OwnerDAO {
 		
 		return owners;
 	}
-	
 	public Owner getOwner(String id) {
 		String ownerSetId = new String("owners:"+id);
 		try {
@@ -79,6 +68,20 @@ public class OwnerDAO {
 	}
 	
 	//IMPLEMENT THIS
+	public void addOwnsBuilding(String building, String owner, String unit) {
+		String keyOwner = new String("owners:"+owner+";owns");
+		String keyValue = new String("buildings:"+building+":units:"+unit);
+		connection.sadd(keyOwner, keyValue);
+		connection.sadd(new String(keyValue + ":owners"), new String("owners:"+owner));
+	}
+	
+	public void removeOwnsBuilding(String building, String owner, String unit) {
+		String keyOwner = new String("owners:"+owner+";owns");
+		connection.del(keyOwner);
+		String keyValue = new String("buildings:"+building+":units:"+unit+":owners");
+		connection.del(keyValue);
+	}
+	
 	public static List<Owner> getOwnersByBuildingKey (String key) {
 		String unitOwnerSetId = new String(key+":owners");
 		List<Owner> owners = new ArrayList<Owner>();
