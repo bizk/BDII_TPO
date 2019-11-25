@@ -66,6 +66,15 @@ public class Controlador {
         		case 12:
         			getAllOwners();
         			break;
+        		case 13:
+        			agregarDuenioUnidad();
+        			break;
+        		case 14:
+        			eliminarDuenioUnidad();
+        			break;
+        		case 15:
+        			vista1();
+        			break;
         		case 0:
         			System.out.println("terminado!");
         			return ;
@@ -73,6 +82,17 @@ public class Controlador {
         }
 	}
 	
+	private static void vista1() throws IOException {
+		System.out.println("Devuelve todas las unidades con cierto estado en un edificio determinado. ");
+		System.out.println("Ingrese el id del edificio: ");
+		String id = br.readLine();
+		System.out.println("Ingrese el estado a buscar: ");
+		String status = br.readLine();
+		List<String> resul = bdao.vista(id, status);
+		for(String r: resul)
+			System.out.println(r);
+	}
+
 	private static void agregarEdificio() throws IOException {
 		System.out.println("Escriba un id: ");
 		String id = br.readLine();
@@ -160,7 +180,6 @@ public class Controlador {
 			System.out.println(ow.toString());
 	}
 	
-
 	private static void agregarDuenioUnidad() throws IOException {
 		System.out.println("Escriba un id del edif: ");
 		String idBuilding = br.readLine();

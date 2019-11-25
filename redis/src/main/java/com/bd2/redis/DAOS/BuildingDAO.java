@@ -14,6 +14,7 @@ import com.bd2.redis.models.Owner;
 import com.bd2.redis.models.Unit;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ScanResult;
 
 public class BuildingDAO  {
 	private static Jedis connection;
@@ -116,7 +117,7 @@ public class BuildingDAO  {
 	 	List<Unit> units = new ArrayList<Unit>();
 		for(String keyset: connection.keys(query)) {
 			int kl = keyset.length();
-			if (kl > 20 && kl < 23) {
+			isf (kl > 20 && kl < 23) {
 				Unit unit= getUnit(buildingid, keyset.substring(20,22));
 				if(unit != null ) {
 					units.add(unit);
@@ -124,6 +125,18 @@ public class BuildingDAO  {
 			}
 		}
 	 	return units;
+	}
+
+	public static List<String> vista(String buildingId, String status) {
+		String buildingCommands = new String("buildings:"+buildingId+":units");
+		ScanResult<String> units = connection.sscan(buildingCommands, "match *");
+		List<String> resul = new ArrayList();
+		for(String unit: units.getResult()) {
+			String unitStatus = connection.hget(buildingCommands + ":"+unit, "status");
+			if(unitStatus == status) 
+				resul.add(new String(buildingCommands + ":"+unit));
+		}
+		return resul;
 	}
 	
 }
