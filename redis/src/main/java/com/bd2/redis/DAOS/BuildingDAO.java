@@ -101,7 +101,6 @@ public class BuildingDAO  {
 		try {
 			String status = connection.hget(unitSetId, "status");
 			String tenant = connection.hget(unitSetId, "tenant");
-			System.out.println(status + tenant);
 			if(status == null || tenant == null) {
 				System.out.println("No se encuentra dicha unidad");
 				return null;
@@ -115,27 +114,30 @@ public class BuildingDAO  {
 	public static List<Unit> getAllUnits(String buildingid) {
 	 	String query = new String("*buildings:" + buildingid + ":units*" );
 	 	List<Unit> units = new ArrayList<Unit>();
+
 		for(String keyset: connection.keys(query)) {
 			int kl = keyset.length();
-			isf (kl > 20 && kl < 23) {
+			if (kl > 20 && kl < 23) {
 				Unit unit= getUnit(buildingid, keyset.substring(20,22));
 				if(unit != null ) {
 					units.add(unit);
 				}
 			}
 		}
+		
 	 	return units;
 	}
 
 	public static List<String> vista(String buildingId, String status) {
 		String buildingCommands = new String("buildings:"+buildingId+":units");
-		ScanResult<String> units = connection.sscan(buildingCommands, "match *");
-		List<String> resul = new ArrayList();
+		ScanResult<String> units = connection.sscan(buildingCommands, "0");
+		List<String> resul = new ArrayList<String>();
 		for(String unit: units.getResult()) {
 			String unitStatus = connection.hget(buildingCommands + ":"+unit, "status");
-			if(unitStatus == status) 
+			if(unitStatus != null && unitStatus.contentEquals(status)) 
 				resul.add(new String(buildingCommands + ":"+unit));
 		}
+		System.out.println("La cantidad de unidades que tienen dicho estado es: " + resul.size());
 		return resul;
 	}
 	
