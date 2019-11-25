@@ -53,4 +53,8 @@ public class Owner implements Serializable {
 		this.owns = owns;
 	}
 	
+	@Override
+	public String toString() {
+		return new String(this.id + " " + this.name + " " + this.surname);
+	}
 }

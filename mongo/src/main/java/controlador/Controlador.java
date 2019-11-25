@@ -26,7 +26,7 @@ public class Controlador {
 	private static Scanner in;
 	private static BufferedReader br;
 	
-	public static void init() {
+	public static void init() throws IOException {
 		mongoDAO = new MongoDAO();
 		br = new BufferedReader(new InputStreamReader(System.in));
         in = new Scanner(System.in); 
@@ -39,7 +39,6 @@ public class Controlador {
 					try {
 						agregarInversion();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
         			break;
@@ -47,7 +46,6 @@ public class Controlador {
 					try {
 						deleteInversion();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					break;
@@ -68,6 +66,9 @@ public class Controlador {
         		case 11:
         			vista1();
         			break;
+        		case 12:
+        			vista2();
+        			break;
         		case 0:
         			System.out.println("Adios! :)");
         			return;
@@ -75,6 +76,12 @@ public class Controlador {
         }
 	}
 	
+	private static void vista2() throws IOException {
+		System.out.println("Inserte nombre de la inversion: ");
+		String name = br.readLine();	
+		mongoDAO.vista2(name);
+	}
+
 	private static void vista1() {
 		mongoDAO.vista1();
 	}
@@ -135,6 +142,7 @@ public class Controlador {
 	private static void findAll() {
 		mongoDAO.findAll();
 	}
+	
 	private static void printMenu() {
 		System.out.println("==== M E N U ====");
 		System.out.println("1- Agregar Inversion");
@@ -142,8 +150,8 @@ public class Controlador {
 		System.out.println("3- Buscar Inversion");
 		System.out.println("4- Todos las inversiones");
 		System.out.println("5 - generar Automaticamente Inversion");
-		//Space for extra things
-		System.out.println("11- vista 1");
+		System.out.println("11- obtener inversion con mayor cantidad de operaciones");
+		System.out.println("12- obtener recomendaciones");
 		System.out.println("=============");
 		System.out.println("0 - SALIR");
 	}

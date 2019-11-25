@@ -27,18 +27,20 @@ public class MongoDAO {
 	private static MongoDatabase db;
 	private static MongoCollection<Document> inversionesDb;
 	public MongoDAO() {
-		/*MongoClientURI uri = new MongoClientURI(
+		MongoClientURI uri = new MongoClientURI(
 		    "mongodb+srv://dbUser:Abcde12345!@dbiicluster-mc1uy.mongodb.net/test?retryWrites=true&w=majority");
 		
 
-		MongoClient mongo = new MongoClient(uri);*/
+		MongoClient mongo = new MongoClient(uri);
 		
 		//		MongoDatabase database = mongoClient.getDatabase("test");
-		MongoClient mongo = new MongoClient();
+		//MongoClient mongo = new MongoClient();
 		db = mongo.getDatabase("bdII_1");
 		inversionesDb = db.getCollection("inversiones");
 	}
 	
+	
+	//Si tiene dos con 2 o + con la misma cantidad de operaciones solo muestra el que empieza con la letra inciial.
 	public static void vista1() {
 		AggregateIterable<Document> documents = inversionesDb.aggregate(Arrays.asList(
 				new Document("$project", 
@@ -104,5 +106,27 @@ public class MongoDAO {
 		FindIterable<Document> cursor = inversionesDb.find(query);
 		for(Document doc: cursor) 
 			System.out.println(doc);
+	}
+
+
+	public static void vista2(String name) {
+		AggregateIterable<Document> documents = inversionesDb.aggregate(Arrays.asList(
+				new Document("$match", 
+						new Document("nombre", name)),
+				new Document("$unwind","$recomendaciones"),
+				new Document("$group", 
+						new Document("_id","$recomendaciones.autor")
+						.append("total", 
+								new Document("$sum",1))),
+				new Document("$sort", 
+						new Document("total", 1)),
+				new Document("$project", 
+						new Document("_id1",1)
+						.append("total", 1)),
+				new Document("$limit",1)
+				));
+		for(Document doc: documents){
+			System.out.println(doc);
+		}
 	}
 }

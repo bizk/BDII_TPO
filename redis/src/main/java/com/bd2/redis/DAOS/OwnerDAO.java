@@ -31,26 +31,35 @@ public class OwnerDAO {
 		connection.hset(ownersSetId, map);
 	}
 	
+	public void delete(String ownerId) {
+		try {
+			String unitSetId = new String("owners:"+ownerId);
+			connection.del(unitSetId);
+		} catch (Exception e) {
+			System.out.println("No se pudo borrar el elemento.");
+		}
+	}
+	
 	public void addOwnsBuilding(Building building, Owner owner, Unit unit) {
 		String keyOwner = new String("owners:"+owner.getId()+";owns");
 		String keyVañue = new String("buildings:"+building.getId()+":units:"+unit.getId());
 		connection.sadd(keyOwner, keyVañue);
 	}
 
-	public void delete(Owner owner) {
-		try {
-			String unitSetId = new String("owners:"+owner.getId());
-			connection.del(unitSetId);
-		} catch (Exception e) {
-			System.out.println("No se pudo borrar el elemento.");
-		}
-	}
+
 
 	public List<Owner> getAll() {
 		List<Owner> owners = new ArrayList<Owner>();
-		for(String key: connection.hkeys("owners")) {
-			owners.add(getOwner(key));
+		for(String keyset: connection.keys("*owners*")) {
+			int kl = keyset.length();
+			if (kl > 7 && kl < 11) {
+				Owner owner = getOwner(keyset.substring(8,kl));
+				if(owner != null ) {
+					owners.add(owner);
+				}
+			}
 		}
+		
 		return owners;
 	}
 	
@@ -61,7 +70,7 @@ public class OwnerDAO {
 					id,
 					connection.hget(ownerSetId, "name"),
 					connection.hget(ownerSetId, "surname"),
-					ownedUnits(id)
+					new ArrayList<String>()
 					);
 		} catch (Exception e) {
 			System.out.println("Probablemente no exista dicho dueño!");

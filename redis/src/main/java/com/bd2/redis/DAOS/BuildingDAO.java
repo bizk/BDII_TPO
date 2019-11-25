@@ -34,22 +34,6 @@ public class BuildingDAO  {
 		map.put("address",building.getAddress());
 				
 		connection.hset(buildingSetId, map);
-		
-		for(Unit unit: building.getUnits()) {
-			addUnit(building, unit);
-		}
-	}
-	
-	public static void addUnit(Building building, Unit unit) {
-		String buildingSetIdUnit = new String("buildings:"+building.getId()+":units");
-		connection.sadd(buildingSetIdUnit, unit.getId());
-
-		String unitSetId = new String(buildingSetIdUnit+":"+unit.getId());
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("status", unit.getStatus());
-		map.put("tenant", unit.getTenant());
-		
-		connection.hset(unitSetId, map);
 	}
 	
 	public void addOwner(Building building, Unit unit, Owner owner) {
@@ -59,22 +43,28 @@ public class BuildingDAO  {
 	
 	public List<Building> getAll() {
 		List<Building> buildings = new ArrayList<Building>();
-		for(String key: connection.hkeys("buildings")) {
-			buildings.add(getBuilding(key));
+		for(String keyset: connection.keys("*buildings*")) {
+			int kl = keyset.length();
+			if (kl > 10 && kl < 14) {
+				Building building = getBuilding(keyset.substring(10,kl));
+				if(building != null ) {
+					buildings.add(building);
+				}
+			}
 		}
+		
 		return buildings;
 	}
-	
 	public Building getBuilding(String id) {
 		String buildingSetId = new String("buildings:"+id);
 		try {
 			String name = connection.hget(buildingSetId, "name");
 			String address = connection.hget(buildingSetId, "address");
-			return new Building(id, name, address, listOfUnits(id));
+			return new Building(id, name, address, new ArrayList<Unit>());
 		} catch (Exception e) {
 			System.out.println("Probablemente no exista tal edificio");
+			return null;
 		}
-		return null;
 	}
 	
 	public void delete(Building building) {
@@ -85,20 +75,55 @@ public class BuildingDAO  {
 			System.out.println("No existe tal objeto");
 		}
 	}
+	
+	public static void addUnit(String building, Unit unit) {
+		String buildingSetIdUnit = new String("buildings:"+building+":units");
+		connection.sadd(buildingSetIdUnit, unit.getId());
 
-	private List<Unit> listOfUnits(String id) {
-		String buildingSetId = new String("buildings:"+id);
-		List<Unit> units = new ArrayList<Unit>();
-		for(String key: connection.hkeys(buildingSetId+":units")) {
-			String unitKey = new String(buildingSetId+":units:"+key);
-			Unit unit = new Unit(
-					key,
-					connection.hget(unitKey, "status"),
-					connection.hget(unitKey, "tenant"),
-					OwnerDAO.getOwnersByBuildingKey(unitKey)
-					);			
-			units.add(unit);
-		}
-		return units;
+		String unitSetId = new String(buildingSetIdUnit+":"+unit.getId());
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("status", unit.getStatus());
+		map.put("tenant", unit.getTenant());
+		
+		connection.hset(unitSetId, map);
 	}
+	public static void deleteUnit(String buildingid, String unitId) {
+		try {
+		 	String unitSetId = new String("buildings:" + buildingid + ":units:" + unitId);
+		 	connection.del(unitSetId);
+		} catch (Exception e) {
+			System.out.println("NO existe esta unidad");
+		}
+	}
+	public static Unit getUnit(String buildingid, String unitId) {
+	 	String unitSetId = new String("buildings:" + buildingid + ":units:" + unitId);
+		try {
+			String status = connection.hget(unitSetId, "status");
+			String tenant = connection.hget(unitSetId, "tenant");
+			System.out.println(status + tenant);
+			if(status == null || tenant == null) {
+				System.out.println("No se encuentra dicha unidad");
+				return null;
+			}
+			return new Unit(unitId, status, tenant, new ArrayList());
+		} catch (Exception e) {
+			System.out.println("NO existe esta unidad");
+			return null;
+		}
+	}
+	public static List<Unit> getAllUnits(String buildingid) {
+	 	String query = new String("*buildings:" + buildingid + ":units*" );
+	 	List<Unit> units = new ArrayList<Unit>();
+		for(String keyset: connection.keys(query)) {
+			int kl = keyset.length();
+			if (kl > 20 && kl < 23) {
+				Unit unit= getUnit(buildingid, keyset.substring(20,22));
+				if(unit != null ) {
+					units.add(unit);
+				}
+			}
+		}
+	 	return units;
+	}
+	
 }

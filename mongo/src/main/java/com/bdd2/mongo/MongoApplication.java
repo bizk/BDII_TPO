@@ -1,6 +1,7 @@
 package com.bdd2.mongo;
 
 import java.awt.geom.GeneralPath;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,11 +18,12 @@ import controlador.Controlador;
 @SpringBootApplication
 public class MongoApplication {
 	public static void main(String[] args) {
-		// SpringApplication.run(MongoApplication.class, args);
-		// MongoDatabase db = DbConnectionUtils.getConnection().getDb();
-		// System.out.println(db.getName());
-	
 		Controlador ctrl = new Controlador();
-		ctrl.init();
+		try {
+			ctrl.init();
+		} catch (IOException e) {
+			System.out.println("algo salio mal!");
+			e.printStackTrace();
+		}
 	}
 }

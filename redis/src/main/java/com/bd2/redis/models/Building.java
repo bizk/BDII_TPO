@@ -50,4 +50,10 @@ public class Building implements Serializable {
 	public void setUnits(List<Unit> units) {
 		this.units = units;
 	}
+	
+	@Override
+	public String toString() {
+		return new String(this.id + " " + this.name + " " + this.address);
+	}
+	
 }

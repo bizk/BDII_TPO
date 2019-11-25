@@ -45,4 +45,8 @@ public class Unit implements Serializable {
 		this.owners = owners;
 	}
 	
+	@Override
+	public String toString() {
+		return new String(id + " " + this.status + " " + this.tenant);
+	}
 }
