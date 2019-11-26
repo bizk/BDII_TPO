@@ -66,6 +66,15 @@ public class Controlador {
         		case 12:
         			getAllOwners();
         			break;
+        		case 13:
+        			agregarDuenioUnidad();
+        			break;
+        		case 14:
+        			eliminarDuenioUnidad();
+        			break;
+        		case 15:
+        			vista1();
+        			break;
         		case 0:
         			System.out.println("terminado!");
         			return ;
@@ -73,8 +82,20 @@ public class Controlador {
         }
 	}
 	
+	private static void vista1() throws IOException {
+		System.out.println("Devuelve todas las unidades con cierto estado en un edificio determinado. ");
+		System.out.println("Ingrese el id del edificio (3 Digitos) (3 Digitos): ");
+		String id = br.readLine();
+		System.out.println("Ingrese el estado a buscar: ");
+		String status = br.readLine();
+		List<String> resul = bdao.vista(id, status);
+		for(String r: resul)
+			System.out.println(r);
+	}
+
 	private static void agregarEdificio() throws IOException {
-		System.out.println("Escriba un id: ");
+		System.out.println("Agregar edificio");
+		System.out.println("Escriba un id (3 Digitos): ");
 		String id = br.readLine();
 		System.out.println("Escriba un nombre: ");
 		String name = br.readLine();
@@ -83,25 +104,29 @@ public class Controlador {
 		bdao.add(new Building(id, name, address, new ArrayList<>()));
 	}
 	private static void eliminarEdificio() throws IOException {
-		System.out.println("Escriba un id: ");
+		System.out.println("Eliminar edificio");
+		System.out.println("Escriba un id (3 Digitos): ");
 		String id = br.readLine();
 		bdao.delete(bdao.getBuilding(id));
 	}
 	private static void buscarEdificio() throws IOException {
-		System.out.println("Escriba un id: ");
+		System.out.println("Buscar Edificio");
+		System.out.println("Escriba un id (3 Digitos): ");
 		String id = br.readLine();
 		System.out.println(bdao.getBuilding(id).toString());;
 	}
 	private static void obtenerEdificios() throws IOException {
+		System.out.println("Obtener todos los edificios: ");
 		List<Building> buildings = bdao.getAll();
 		for(Building bd: buildings)
 			System.out.println(bd.toString());
 	}
 		
 	private static void agregarUnidad() throws IOException {
-		System.out.println("Escriba id del edificio: ");
+		System.out.println("Agregar unidad");
+		System.out.println("Escriba id del edificio (3 Digitos): ");
 		String buildingid = br.readLine();
-		System.out.println("Escriba id: ");
+		System.out.println("Escriba id de unidad (2 Digitos): ");
 		String id = br.readLine();
 		System.out.println("Escriba estado: ");
 		String status = br.readLine();
@@ -113,21 +138,24 @@ public class Controlador {
 		bdao.addUnit(buildingid, new Unit(id,status,tenant,owners));
 	}
 	private static void eliminarUnidad() throws IOException {
-		System.out.println("Escriba un id de edificio: ");
+		System.out.println("Eliminar unidad");
+		System.out.println("Escriba un id de edificio (3 Digitos): ");
 		String buildingid = br.readLine();
-		System.out.println("Escriba un id de la unidad: ");
+		System.out.println("Escriba un id de la unidad (2 Digitos): ");
 		String unitid = br.readLine();
 		bdao.deleteUnit(buildingid, unitid);
 	}
 	private static void buscarUnidad() throws IOException {
-		System.out.println("Escriba un id de edificio: ");
+		System.out.println("Buscar unidad");
+		System.out.println("Escriba un id de edificio (3 Digitos): ");
 		String buildingid = br.readLine();
-		System.out.println("Escriba un id de la unidad: ");
+		System.out.println("Escriba un id de la unidad (2 Digitos): ");
 		String unitid = br.readLine();
 		System.out.println(bdao.getUnit(buildingid, unitid).toString());
 	}
 	private static void getAllUnidades() throws IOException {
-		System.out.println("Escriba un id de edificio: ");
+		System.out.println("Obtener todas las unidades");
+		System.out.println("Escriba un id de edificio(3 Digitos): ");
 		String buildingid = br.readLine();
 		List<Unit> unidades = bdao.getAllUnits(buildingid);
 		for(Unit u: unidades) 
@@ -135,7 +163,8 @@ public class Controlador {
 	}
 	
 	private static void agregarOwner() throws IOException {
-		System.out.println("Escriba un id: ");
+		System.out.println("Agregar dueño");
+		System.out.println("Escriba un id del dueño (3 Digitos): ");
 		String id = br.readLine();
 		System.out.println("Escriba un nombre: ");
 		String name = br.readLine();
@@ -145,12 +174,14 @@ public class Controlador {
 		odao.add(new Owner(id, name, surname, null));
 	}
 	private static void eliminarDuenio() throws IOException {
-		System.out.println("Escriba un id: ");
+		System.out.println("Eliminar dueño");
+		System.out.println("Escriba un id de dueño a eliminar (3 Digitos): ");
 		String id = br.readLine();
 		odao.delete(id);
 	}
 	private static void buscarDuenio() throws IOException {
-		System.out.println("Escriba un id: ");
+		System.out.println("Buscar dueño");
+		System.out.println("Escriba un id (3 Digitos): ");
 		String id = br.readLine();
 		System.out.println(odao.getOwner(id).toString());;
 	}
@@ -160,22 +191,23 @@ public class Controlador {
 			System.out.println(ow.toString());
 	}
 	
-
 	private static void agregarDuenioUnidad() throws IOException {
-		System.out.println("Escriba un id del edif: ");
+		System.out.println("Agregar dueño a unidad");
+		System.out.println("Escriba un id del edif (3 Digitos): ");
 		String idBuilding = br.readLine();
-		System.out.println("Escriba un id de unidad: ");
+		System.out.println("Escriba un id de unidad (2 Digitos): ");
 		String idUnidad = br.readLine();
-		System.out.println("Escriba un id del duenio: ");
+		System.out.println("Escriba un id del duenio (3 Digitos): ");
 		String idDuenio = br.readLine();
 		odao.addOwnsBuilding(idBuilding, idDuenio, idUnidad);
 	}
 	private static void eliminarDuenioUnidad() throws IOException {
-		System.out.println("Escriba un id del edif: ");
+		System.out.println("Eliminar dueño de unidad");
+		System.out.println("Escriba un id del edif (3 Digitos): ");
 		String idBuilding = br.readLine();
-		System.out.println("Escriba un id de unidad: ");
+		System.out.println("Escriba un id de unidad (2 Digitos): ");
 		String idUnidad = br.readLine();
-		System.out.println("Escriba un id del duenio: ");
+		System.out.println("Escriba un id del duenio (3 Digitos): ");
 		String idDuenio = br.readLine();
 
 		odao.removeOwnsBuilding(idBuilding, idDuenio, idUnidad);

@@ -43,7 +43,7 @@ public class OwnerDAO {
 		for(String keyset: connection.keys("*owners*")) {
 			int kl = keyset.length();
 			if (kl > 7 && kl < 11) {
-				Owner owner = getOwner(keyset.substring(8,kl));
+				Owner owner = getOwner(keyset.substring(7,kl));
 				if(owner != null ) {
 					owners.add(owner);
 				}
